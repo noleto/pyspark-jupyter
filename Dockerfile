@@ -20,20 +20,25 @@ RUN cd /usr/local && ln -s spark-${APACHE_SPARK_VERSION}-bin-hadoop2.6 spark
 #Use unprivileged user provided by base image
 USER jovyan
 
-# Install Python 3 packages
-RUN conda install --yes \
+# Install Python 2 packages and kernel spec
+RUN conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 \
+    'ipython=3.2*' \
     'pandas=0.16*' \
     'matplotlib=1.4*' \
     'scipy=0.15*' \
     'seaborn=0.6*' \
     'scikit-learn=0.16*' \
+    pyzmq \
     && conda clean -yt
 
+RUN $CONDA_DIR/envs/python2/bin/python \
+    $CONDA_DIR/envs/python2/bin/ipython \
+    kernelspec install-self --user
 
 #Prepare environment
 ENV SPARK_HOME /usr/local/spark
 ENV PYSPARK_SUBMIT_ARGS="--master local[*] pyspark-shell"
-#ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.8.2.1-src.zip
+ENV PYSPARK_PYTHON='python2'
 
 RUN ipython profile create pyspark
 
