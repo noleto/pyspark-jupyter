@@ -52,8 +52,8 @@ COPY 00-pyspark-setup.py $HOME/.ipython/profile_pyspark/startup/00-pyspark-setup
 COPY ipython_notebook_config.py $HOME/.ipython/profile_pyspark/
 
 #Ship some data for workshop
-COPY data $HOME/work/data
-COPY 00_welcome.ipynb $HOME/work
+COPY data $HOME/work/data/
+COPY 00_welcome.ipynb $HOME/work/
 
 #COPY and ADD don't add as the current user https://github.com/docker/docker/issues/7390, https://github.com/docker/docker/pull/13600
 USER root
