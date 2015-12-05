@@ -29,30 +29,40 @@ RUN conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 \
     'seaborn=0.6*' \
     'scikit-learn=0.16*' \
     pyzmq \
+    pil \
+    tornado \
     && conda clean -yt
 
 RUN $CONDA_DIR/envs/python2/bin/python \
     $CONDA_DIR/envs/python2/bin/ipython \
     kernelspec install-self --user
 
+#Install World cloud http://amueller.github.io/word_cloud/
+RUN $CONDA_DIR/envs/python2/bin/pip install wordcloud
+
 #Prepare environment
 ENV SPARK_HOME /usr/local/spark
 ENV PYSPARK_SUBMIT_ARGS="--master local[*] pyspark-shell"
 ENV PYSPARK_PYTHON='python2'
 
+#Create PySpark profile for Jupyter
 RUN ipython profile create pyspark
 
 COPY 00-pyspark-setup.py $HOME/.ipython/profile_pyspark/startup/00-pyspark-setup.py
 COPY ipython_notebook_config.py $HOME/.ipython/profile_pyspark/
 
+#Ship some data for workshop
 COPY data $HOME/work/data
+COPY 00_welcome.ipynb $HOME/work
+
 #COPY and ADD don't add as the current user https://github.com/docker/docker/issues/7390, https://github.com/docker/docker/pull/13600
 USER root
-RUN chown jovyan:jovyan $HOME/work/data -R
+RUN chown jovyan:jovyan $HOME/work -R
 
 #Back to our unprivileged user
 USER jovyan
 
+#SparkUI
 EXPOSE 4040
 
 CMD ipython notebook --no-browser --profile=pyspark
