@@ -50,14 +50,13 @@ ENV PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser"
 COPY data $HOME/work/data/
 COPY 00_welcome.ipynb $HOME/work/
 
-#COPY and ADD don't add as the current user https://github.com/docker/docker/issues/7390, https://github.com/docker/docker/pull/13600
+# Switch back to root so that supervisord runs under that user
 USER root
-RUN chown jovyan:jovyan $HOME/work -R
 
-#Back to our unprivileged user
-USER jovyan
+#COPY and ADD don't add as the current user https://github.com/docker/docker/issues/7390, https://github.com/docker/docker/pull/13600
+RUN chown jovyan:jovyan $HOME/work -R
 
 #SparkUI
 EXPOSE 4040
 
-CMD $SPARK_HOME/bin/pyspark --packages com.databricks:spark-csv_2.10:1.3.0 --master local[*] --executor-memory 1G --driver-memory 1G
+COPY notebook.conf /etc/supervisor/conf.d/
