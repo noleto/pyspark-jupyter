@@ -5,7 +5,7 @@ MAINTAINER Leonardo Noleto
 USER root
 
 # Spark dependencies
-ENV APACHE_SPARK_VERSION 1.5.1
+ENV APACHE_SPARK_VERSION 1.6.0
 
 # Install necessary packages
 RUN apt-get -y update && \
@@ -42,14 +42,9 @@ RUN $CONDA_DIR/envs/python2/bin/pip install wordcloud
 
 #Prepare environment
 ENV SPARK_HOME /usr/local/spark
-ENV PYSPARK_SUBMIT_ARGS="--master local[*] pyspark-shell"
-ENV PYSPARK_PYTHON='python2'
-
-#Create PySpark profile for Jupyter
-RUN ipython profile create pyspark
-
-COPY 00-pyspark-setup.py $HOME/.ipython/profile_pyspark/startup/00-pyspark-setup.py
-COPY ipython_notebook_config.py $HOME/.ipython/profile_pyspark/
+ENV PYSPARK_PYTHON=$CONDA_DIR/envs/python2/bin/python2.7
+ENV PYSPARK_DRIVER_PYTHON=ipython
+ENV PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser"
 
 #Ship some data for workshop
 COPY data $HOME/work/data/
@@ -65,4 +60,4 @@ USER jovyan
 #SparkUI
 EXPOSE 4040
 
-CMD ipython notebook --no-browser --profile=pyspark
+CMD $SPARK_HOME/bin/pyspark --packages com.databricks:spark-csv_2.10:1.3.0 --master local[*] --executor-memory 1G --driver-memory 1G

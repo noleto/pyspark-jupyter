@@ -5,7 +5,7 @@
 * Jupyter Notebook 3.2
 * Conda Python 2.7.x
 * pyspark, pandas, matplotlib, scipy, seaborn, scikit-learn pre-installed
-* Spark 1.5.1 for use in local mode
+* Spark 1.6.0 for use in local mode
 * Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
 
 ## Basic Use
