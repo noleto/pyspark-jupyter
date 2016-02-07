@@ -9,7 +9,7 @@ ENV APACHE_SPARK_VERSION 1.6.0
 
 # Install necessary packages
 RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends openjdk-7-jre-headless && \
+    apt-get install -y --no-install-recommends openjdk-7-jre-headless python-qt4 && \
     apt-get clean
 
 # Download pre-compiled Apache Spark
@@ -23,11 +23,11 @@ USER jovyan
 # Install Python 2 packages and kernel spec
 RUN conda create --yes -p $CONDA_DIR/envs/python2 python=2.7 \
     'ipython=3.2*' \
-    'pandas=0.16*' \
-    'matplotlib=1.4*' \
-    'scipy=0.15*' \
-    'seaborn=0.6*' \
-    'scikit-learn=0.16*' \
+    'pandas' \
+    'matplotlib' \
+    'scipy' \
+    'seaborn' \
+    'scikit-learn' \
     pyzmq \
     pil \
     tornado \
@@ -39,6 +39,9 @@ RUN $CONDA_DIR/envs/python2/bin/python \
 
 #Install World cloud http://amueller.github.io/word_cloud/
 RUN $CONDA_DIR/envs/python2/bin/pip install wordcloud
+
+#Install Drag'n'Drop Pivot Tableshttps://github.com/nicolaskruchten/jupyter_pivottablejs
+RUN $CONDA_DIR/envs/python2/bin/pip install pivottablejs
 
 #Prepare environment
 ENV SPARK_HOME /usr/local/spark
