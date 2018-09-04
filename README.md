@@ -1,12 +1,10 @@
-# Jupyter Notebook Python + Spark for Toulouse Data Science workshop
+# Data Munging with PySpark
 	
 ## What it Gives You
 
-* Jupyter Notebook 3.2
-* Conda Python 2.7.x
-* pyspark, pandas, matplotlib, scipy, seaborn, scikit-learn pre-installed
-* Spark 1.6.0 for use in local mode
-* Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
+* Basically the same as [Jupyter Notebook Python, Spark, Mesos Stack](https://jupyter-docker-stacks.readthedocs.io/en/latest/using/specifics.html#apache-spark)
+* Data for the workshop
+* Startup Notebook to check everything is Ok!
 
 ## Basic Use
 
@@ -21,17 +19,19 @@ docker run -d -p 8888:8888 -p 4040:4040 noleto/pyspark-jupyter
 This configuration is nice for using Spark on small, local data.
 
 0. Run the container as shown above.
-2. Open a Python 2 notebook.
-3. `SparkContext` is already configured for local mode.
+2. Open a Python 3 notebook.
 
-For example, the first few cells in a Python 2 notebook might read:
+For example, the first few cells in a Python 3 notebook might read:
 
 ```python
+import pyspark
+sc = pyspark.SparkContext('local[*]')
+
 # do something to prove it works
-rdd = sc.parallelize(xrange(1000))
+rdd = sc.parallelize(range(1000))
 rdd.takeSample(False, 5)
 ```
 
 ## Notebook Options
 
-See base image page [Minimal Jupyter Notebook Stack](https://github.com/jupyter/docker-stacks/tree/3.2.x/minimal-notebook) 
+See base image page [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html) 
